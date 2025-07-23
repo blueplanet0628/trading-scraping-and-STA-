@@ -9,6 +9,7 @@ popup_browser = None  # initially None
 SOH = '\x01'
 
 def set_popup_browser(popup):
+    print("[SCRAPER] Setting popup browser", popup)
     global popup_browser
     popup_browser = popup
     
