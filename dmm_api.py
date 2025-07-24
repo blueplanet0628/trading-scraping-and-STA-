@@ -1,7 +1,7 @@
 from playwright.async_api import Page
 import asyncio
 
-async def send_order_to_dmm(popup: Page, order: dict) -> tuple[bool, str | None]:
+async def send_order_to_dmm(popup: Page, order: dict) -> tuple[bool, dict | str | None]:
     try:
         # Extract order information
         raw_symbol = order.get("55")  # e.g. 'USDJPY'
@@ -62,10 +62,7 @@ async def send_order_to_dmm(popup: Page, order: dict) -> tuple[bool, str | None]
 
         # --- Close confirmation modal ---
         try:
-            # Wait for modal confirmation message to appear
             await popup.wait_for_selector('#layer p.resultMessage:has-text("注文を受け付けました。")', timeout=7000)
-
-            # Locate the unique '閉じる' button
             close_button = popup.locator('#layer button[uifield="closeButton"]', has_text="閉じる")
             await close_button.wait_for(state='visible', timeout=7000)
             await close_button.click()
@@ -73,8 +70,19 @@ async def send_order_to_dmm(popup: Page, order: dict) -> tuple[bool, str | None]
         except Exception as e:
             print(f"[⚠️ CLOSE WARNING] モーダル閉じる操作失敗: {e}")
 
-        return True, None
+        # Prepare execution result on success
+        executed_qty = order.get("38")
+
+        exec_result = {
+            "38": executed_qty,
+            # Add other FIX tags if needed
+        }
+        print('Execution result:', exec_result)
+
+        return True, exec_result
 
     except Exception as e:
-        print(f"[❌ ORDER ERROR] {type(e).__name__}: {e}")
-        return False, str(e)
+        err_msg = f"{type(e).__name__}: {e}"
+        print(f"[❌ ORDER ERROR] {err_msg}")
+        # On failure, return False and error message with order info
+        return False, {"error": err_msg, "order": order}
