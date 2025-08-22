@@ -4,7 +4,7 @@ import asyncio
 from dmm_api import send_order_to_dmm  # Must be async def send_order_to_dmm(browser, order)
 import socketserver
 import asyncio
-popup_browser = None  # initially None
+popup_browser = None 
 
 SOH = '\x01'
 
