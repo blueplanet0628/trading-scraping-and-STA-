@@ -87,28 +87,6 @@ async def send_order_to_dmm(popup: Page, order: dict) -> tuple[bool, dict | str 
         else:
             raise TimeoutError("Execute button not enabled in time")
 
-        # --- Close confirmation modal (click the Japanese "閉じる" button) ---
-        try:
-            for _ in range(14):  # Retry up to 7 seconds with 0.5 sec intervals
-                close_button = popup.locator('button[uifield="closeButton"]', has_text="閉じる")
-                if await close_button.is_visible():
-                    await close_button.click()
-                    print("[✅ 閉じるボタンをクリックしました]")
-                    break
-                await asyncio.sleep(0.5)
-            else:
-                print("[⚠️ CLOSE WARNING] 閉じるボタンが表示されませんでした")
-        except Exception as e:
-            print(f"[⚠️ CLOSE WARNING] 閉じるボタンのクリックに失敗しました: {e}")
-
-        # --- Prepare execution result ---
-        executed_qty = order.get("38")
-        exec_result = {
-            "38": executed_qty,
-        }
-        print('Execution result:', exec_result)
-
-        return True, exec_result
 
     except Exception as e:
         err_msg = f"{type(e).__name__}: {e}"
