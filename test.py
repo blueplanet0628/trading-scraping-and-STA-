@@ -66,16 +66,13 @@ async def send_order_to_dmm(popup: Page, order: dict) -> tuple[bool, dict | str 
         await btn.click()
         print(f"[✅ CLICKED {'BUY' if side == '1' else 'SELL'} BUTTON]")
 
-        # --- Confirm order ---
         order_confirm = popup.locator('button[uifield="orderButtonAll"]')
         await order_confirm.wait_for(state="visible", timeout=7000)
         await order_confirm.click()
         print("[✅ CLICKED ORDER CONFIRM BUTTON]")
 
-        # Wait a moment for UI to update after confirm click
         await asyncio.sleep(2)
 
-        # --- Execute order ---
         execute_button = popup.locator('button[uifield="orderExecuteButton"]')
         await execute_button.wait_for(state="visible", timeout=10000)
         for _ in range(10):
