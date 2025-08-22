@@ -1,4 +1,4 @@
-# fix_builder.py
+
 import datetime
 
 SOH = '\x01'
