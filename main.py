@@ -1,5 +1,3 @@
-# FIX Bridge: STA Receiver + DMM Manual Trading Bridge
-
 import socket
 import threading
 import datetime
@@ -25,7 +23,6 @@ execution_clients = []
 popup_browser = None
 sta_ready = False
 
-# FIX utility functions
 def parse_fix(message):
     return {
         tag: val for tag, val in (
@@ -98,7 +95,6 @@ async def process_sta_order(order):
             print(f"[ERROR] Failed to send to STA: {e}")
             execution_clients.remove(client)
 
-# Server Handlers
 class STAOrderHandler(socketserver.BaseRequestHandler):
     def handle(self):
         global seq_num
@@ -151,7 +147,6 @@ class STAExecutionHandler(socketserver.BaseRequestHandler):
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     allow_reuse_address = True
 
-# Launch DMM site (popup)
 async def launch_dmm_site():
     global popup_browser
     LOGIN_ID = 'v9411402'
